@@ -12,28 +12,65 @@ where
     Ok(io::BufReader::new(file).lines())
 }
 
+struct LineResult {
+    first_num: i32,
+    last_num: i32,
+}
+
+fn process_num(res: &mut LineResult, num: i32) {
+    if res.first_num == -1 {
+        res.first_num = num;
+        res.last_num = num;
+    } else {
+        res.last_num = num;
+    }
+}
+
 /***
  * find first and last digit in a string, concat them together to form a two digit number
  * if only one digit is present then the first and last digit are the same
  */
 fn find_line_number(line: &str) -> i32 {
     let mut chars = line.chars();
-    let mut first_num: i32 = -1;
-    let mut last_num: i32 = -1;
+    let mut results: LineResult = LineResult {
+        first_num: -1,
+        last_num: -1,
+    };
+    //let mut first_num: i32 = -1;
+    //let mut last_num: i32 = -1;
     while let Some(c) = chars.next() {
         if c.is_numeric() {
-            if first_num == -1 {
-                first_num = c.to_digit(10).unwrap() as i32;
-                last_num = first_num;
-            } else {
-                last_num = c.to_digit(10).unwrap() as i32;
-            }
-        }
+            process_num(&mut results, c.to_digit(10).unwrap() as i32);
+        } /*else {
+              match c{
+                  'z' => {
+
+                  }
+                  'o'=> { //one
+
+                  },
+                  't' => { //two, three
+
+                  },
+                  'f' => { //four, five
+
+                  },
+                  's' => { //six, seven
+
+                  },
+                  'e' => { //eight
+
+                  },
+                  'n' => { //nine
+
+                  }
+              }
+          }*/
     }
-    if first_num == -1 {
+    if results.first_num == -1 {
         panic!("no numbers found {}", line);
     } else {
-        return first_num * 10 + last_num;
+        return results.first_num * 10 + results.last_num;
     }
 }
 
@@ -45,7 +82,7 @@ fn main() {
         // Consumes the iterator, returns an (Optional) String
         for line in lines {
             if let Ok(input) = line {
-                sum += find_line_number(input.as_str());
+                sum += find_line_number(input.to_lowercase().as_str());
             }
         }
     }

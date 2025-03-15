@@ -76,43 +76,6 @@ for line in io.lines(path) do
 	if isGood then
 		goodReports = goodReports + 1
 	end
-
-	-- local isGood = false
-	-- local badIndex = processLine(wordList)
-	-- if badIndex == 0 then
-	-- 	isGood = true
-	-- end
-
-	-- if not isGood then
-	-- 	--try removing bad index
-	-- 	local wordList2 = copyWithRemove(wordList, badIndex)
-	-- 	local badIndex2 = processLine(wordList2)
-	-- 	if badIndex2 == 0 then
-	-- 		isGood = true
-	-- 	end
-	-- end
-
-	-- if not isGood and badIndex > 1 then
-	-- 	--we can try removing the previous one instead
-	-- 	local wordList3 = copyWithRemove(wordList, badIndex - 1)
-	-- 	local badIndex3 = processLine(wordList3)
-	-- 	if badIndex3 == 0 then
-	-- 		isGood = true
-	-- 	end
-	-- end
-
-	-- if not isGood and badIndex < #wordList then
-	-- 	--we can try removing the next index
-	-- 	local wordList4 = copyWithRemove(wordList, badIndex + 1)
-	-- 	local badIndex4 = processLine(wordList4)
-	-- 	if badIndex4 == 0 then
-	-- 		isGood = true
-	-- 	end
-	-- end
-
-	-- if isGood then
-	-- 	goodReports = goodReports + 1
-	-- end
 end
 
 print("Good reports: " .. goodReports)

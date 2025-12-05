@@ -1,16 +1,7 @@
+use std::fs;
 use std::fs::File;
 use std::io::{self, BufRead};
 use std::path::Path;
-
-// The output is wrapped in a Result to allow matching on errors
-// Returns an Iterator to the Reader of the lines of the file.
-fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>
-where
-    P: AsRef<Path>,
-{
-    let file = File::open(filename)?;
-    Ok(io::BufReader::new(file).lines())
-}
 
 struct LineResult {
     first_num: i32,
@@ -41,31 +32,7 @@ fn find_line_number(line: &str) -> i32 {
     while let Some(c) = chars.next() {
         if c.is_numeric() {
             process_num(&mut results, c.to_digit(10).unwrap() as i32);
-        } /*else {
-              match c{
-                  'z' => {
-
-                  }
-                  'o'=> { //one
-
-                  },
-                  't' => { //two, three
-
-                  },
-                  'f' => { //four, five
-
-                  },
-                  's' => { //six, seven
-
-                  },
-                  'e' => { //eight
-
-                  },
-                  'n' => { //nine
-
-                  }
-              }
-          }*/
+        }
     }
     if results.first_num == -1 {
         panic!("no numbers found {}", line);
@@ -78,13 +45,22 @@ fn main() {
     println!("Hello, world!");
     let mut sum = 0;
 
-    if let Ok(lines) = read_lines("./input.txt") {
-        // Consumes the iterator, returns an (Optional) String
-        for line in lines {
-            if let Ok(input) = line {
-                sum += find_line_number(input.to_lowercase().as_str());
-            }
-        }
+    //parse and replace string numbers
+    let file_as_string = fs::read_to_string("./input_small.txt").expect("Unable to read file");
+    let result = file_as_string.to_lowercase().replace("zero", "0");
+    let result = result.replace("one", "1");
+    let result = result.replace("two", "2");
+    let result = result.replace("three", "3");
+    let result = result.replace("four", "4");
+    let result = result.replace("five", "5");
+    let result = result.replace("six", "6");
+    let result = result.replace("seven", "7");
+    let result = result.replace("eight", "8");
+    let result = result.replace("nine", "9");
+    println!("{}", result);
+
+    for line in result.lines() {
+        sum += find_line_number(line);
     }
     println!("{}", sum);
 }

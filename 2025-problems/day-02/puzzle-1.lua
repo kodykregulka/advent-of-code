@@ -46,7 +46,7 @@ local invalidIdList = {}
 
 local function addToInvalidList(num)
 	table.insert(invalidIdList, num)
-	print(num)
+	print("invalid found: " .. num)
 end
 
 local function checkRange(range, invalidIdList)
@@ -58,6 +58,7 @@ local function checkRange(range, invalidIdList)
 		currentMax = range.last
 	end
 	local currentDiv = math.pow(10, currentDigits - 1) + 1 --TODO single digit
+	print("new div: " .. currentDiv)
 	while true do
 		--loop for digits
 		if currentDigits % 2 == 1 then
@@ -65,20 +66,26 @@ local function checkRange(range, invalidIdList)
 			--odd digits, cannot be invalid
 			if currentDigits < range.lastDigits then
 				--increase to next even digit number
+				print("increase to next digit number")
 				currentDigits = currentDigits + 1
+				currentDiv = math.pow(10, currentDigits - 1) + 1
+				print("new div: " .. currentDiv)
 				--increase current to first number in that digit range
 				current = math.pow(10, currentDigits - 1)
 				currentMax = math.pow(10, currentDigits) - 1
 				if currentMax > range.last then
 					currentMax = range.last
 				end
+				print("current: " .. current .. " currentMax: " .. currentMax)
 				--next
 			else
 				--end of range
+				print("end of range")
 				return invalidIdList
 			end
 		else
 			--even digits, there could be some invalids in here!
+			print("even digits, might be something here")
 			local rem = current % currentDiv
 			if rem == 0 then
 				--found one!
@@ -87,6 +94,7 @@ local function checkRange(range, invalidIdList)
 
 			--figure out the next current
 			while current <= currentMax do
+				rem = current % currentDiv
 				local next = current + (currentDiv - rem)
 				print("current:" .. current .. " next:" .. next)
 				if next <= currentMax then
@@ -99,6 +107,7 @@ local function checkRange(range, invalidIdList)
 					--need to go to next digit range
 					print("going to next digit range " .. currentDigits .. "->" .. (currentDigits + 2))
 					currentDigits = currentDigits + 2
+					currentDiv = math.pow(10, currentDigits - 1) + 1
 
 					--put current at start of next digit range
 					current = math.pow(10, currentDigits - 1)
@@ -108,9 +117,11 @@ local function checkRange(range, invalidIdList)
 					end
 					print("new current: " .. current)
 					print("new max: " .. currentMax)
+					print("new div: " .. currentDiv)
 					--next
 				else
 					--done
+					print("end of range")
 					return invalidIdList
 				end
 			end
@@ -119,7 +130,7 @@ local function checkRange(range, invalidIdList)
 end
 
 for i, val in ipairs(rangeList) do
-	--print(i .. ": " .. val.first .. " : " .. val.last)
+	print(i .. " range:" .. val.first .. " - " .. val.last)
 	checkRange(val, invalidIdList)
 	print("invalid count: " .. #invalidIdList)
 end
